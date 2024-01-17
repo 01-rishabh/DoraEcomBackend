@@ -28,8 +28,38 @@ const getProductById = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  // Implement logic to create a new product
+  try {
+    // Extracting product information from the request body
+    const { productName,
+      productPrice,
+      averageRating,
+      productImage,
+      quantity,
+      alcoholConcentration,
+      beverageDescription } = req.body;
+
+    // Creating a new Product instance
+    const newProduct = new Product({
+      productName,
+    productPrice,
+    averageRating,
+    productImage,
+    quantity,
+    alcoholConcentration,
+    beverageDescription
+    });
+
+    // Saving the new product to the database
+    const savedProduct = await newProduct.save();
+
+    // Sending the newly created product as a response
+    res.status(201).json(savedProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
+
 
 // Add more controller functions as needed
 
