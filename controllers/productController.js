@@ -60,6 +60,50 @@ const createProduct = async (req, res) => {
   }
 };
 
+// controllers/productController.js
+// ... (existing code)
+
+const updateProductById = async (req, res) => {
+  const productId = req.params.productId;
+
+  try {
+    // Find the product by ID in the database
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Extract the updated information from the request body
+    const { productName,
+      productPrice,
+      averageRating,
+      productImage,
+      quantity,
+      alcoholConcentration,
+      beverageDescription } = req.body;
+
+    // Update the product properties
+    product.name = productName || product.name;
+    product.price = productPrice || product.price;
+    product.averageRating = averageRating || product.averageRating;
+    product.productImage = productImage || product.productImage;
+    product.quantity = quantity || product.quantity;
+    product.alcoholConcentration = alcoholConcentration || product.alcoholConcentration;
+    product.description = beverageDescription || product.description;
+
+    // Save the updated product to the database
+    const updatedProduct = await product.save();
+
+    // Send the updated product as a response
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
 
 // Add more controller functions as needed
 
@@ -67,5 +111,6 @@ module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
+  updateProductById,
   // Add more controller functions as needed
 };
