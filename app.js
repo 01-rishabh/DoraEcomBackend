@@ -87,7 +87,7 @@ app.use(express.json());
 // Use your product routes (update with your actual routes)
 app.use('/products', productRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3004;
 
 // Start the server
 app.listen(PORT, () => {
