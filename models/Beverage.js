@@ -1,4 +1,3 @@
-// Product.js
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
@@ -6,7 +5,8 @@ const productSchema = new mongoose.Schema({
     productPrice: Number,
     averageRating: Number,
     productImage: String,
-    quantity: Number,
+    volume: Number,
+    stock: Number,
     alcoholConcentration: Number,
     beverageDescription: String
 });

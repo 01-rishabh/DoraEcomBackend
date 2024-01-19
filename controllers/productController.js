@@ -34,7 +34,8 @@ const createProduct = async (req, res) => {
       productPrice,
       averageRating,
       productImage,
-      quantity,
+      volume,
+      stock,
       alcoholConcentration,
       beverageDescription } = req.body;
 
@@ -44,7 +45,8 @@ const createProduct = async (req, res) => {
     productPrice,
     averageRating,
     productImage,
-    quantity,
+    volume,
+    stock,
     alcoholConcentration,
     beverageDescription
     });
@@ -79,7 +81,8 @@ const updateProductById = async (req, res) => {
       productPrice,
       averageRating,
       productImage,
-      quantity,
+      volume,
+      stock,
       alcoholConcentration,
       beverageDescription } = req.body;
 
@@ -88,7 +91,8 @@ const updateProductById = async (req, res) => {
     product.price = productPrice || product.price;
     product.averageRating = averageRating || product.averageRating;
     product.productImage = productImage || product.productImage;
-    product.quantity = quantity || product.quantity;
+    product.volume = volume || product.volume;
+    product.stock = stock || product.stock;
     product.alcoholConcentration = alcoholConcentration || product.alcoholConcentration;
     product.description = beverageDescription || product.description;
 
