@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+    
+    uid: { type: String, required: true },
+
     name: {
        type: String,
        required: true,
        trim: true,
        lowercase: true
      },
+
     email: {
        type: String,
        required: true,
@@ -18,24 +22,11 @@ const userSchema = new mongoose.Schema({
                      }
                 }
       },
-    password: {
-        type: String,
-        required: true,
-        minLength: 7,
-        trim: true,
-        validate(value) {
-           if( value.toLowerCase().includes('password')) {
-           throw new Error('Password must not contain password.')
-          }
-       }
-    },
-    tokens: [{
-      token: {
-      type: String,
-      required: true
-        }
-      }]
-    }, {
+
+    userImage: { type: String }
+    
+    }, 
+    {
     timestamps: true
     })
 
