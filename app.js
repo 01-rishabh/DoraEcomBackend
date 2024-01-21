@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const productRoutes = require('./routes/products'); // Update with your actual routes
+const userRoutes = require('./routes/userRoute');
 
 require('./config');
 
@@ -19,8 +20,14 @@ app.use((_, res, next) => {
   return next();
 }); // sets headers before routes
 
-// Use your product routes (update with your actual routes)
+// Using product routes
 app.use('/products', productRoutes);
+
+app.use('/users', userRoutes);
+
+// app.get('/', (req, res) => {
+//   res.send('Welcome to the DoraEnterprises.');
+// })
 
 const PORT = process.env.PORT || 3004;
 
