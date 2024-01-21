@@ -4,6 +4,11 @@ const Product = require('../models/Beverage');
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
+
+    if(!products){
+      res.status(500).json({success: false})
+    }
+
     res.json(products);
   } catch (error) {
     console.error(error);
@@ -107,7 +112,18 @@ const updateProductById = async (req, res) => {
   }
 };
 
-
+const deleteAProduct = async (req, res) => {
+  const productId = req.params.productId;
+  const product = await Product.deleteOne({productId}).then(product => {
+    if(product){
+      return res.status(200).json({success: true, message: 'the product has been deleted.'})
+    } else {
+      return res.status(404).json({success: false, message: 'the product has been not found.'})
+    }
+  }).catch(err => {
+    return res.status(400).json({success: false, error: err})
+  })
+} 
 
 // Add more controller functions as needed
 
@@ -116,5 +132,6 @@ module.exports = {
   getProductById,
   createProduct,
   updateProductById,
+  deleteAProduct
   // Add more controller functions as needed
 };
