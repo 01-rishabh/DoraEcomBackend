@@ -8,7 +8,10 @@ const productSchema = new mongoose.Schema({
     volume: Number,
     stock: Number,
     alcoholConcentration: Number,
-    beverageDescription: String
+    beverageDescription: String,
+    beverageCategory: String,
+    beverageBrand: String
+    
 });
 
 const Beverage  = mongoose.model('Beverage', productSchema);

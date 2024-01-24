@@ -42,7 +42,9 @@ const createProduct = async (req, res) => {
       volume,
       stock,
       alcoholConcentration,
-      beverageDescription } = req.body;
+      beverageDescription, 
+      beverageCategory, 
+      beverageBrand } = req.body;
 
     // Creating a new Product instance
     const newProduct = new Product({
@@ -53,7 +55,9 @@ const createProduct = async (req, res) => {
     volume,
     stock,
     alcoholConcentration,
-    beverageDescription
+    beverageDescription,
+    beverageCategory, 
+    beverageBrand
     });
 
     // Saving the new product to the database
@@ -89,7 +93,9 @@ const updateProductById = async (req, res) => {
       volume,
       stock,
       alcoholConcentration,
-      beverageDescription } = req.body;
+      beverageDescription,
+      beverageCategory, 
+      beverageBrand } = req.body;
 
     // Update the product properties
     product.name = productName || product.name;
@@ -100,11 +106,14 @@ const updateProductById = async (req, res) => {
     product.stock = stock || product.stock;
     product.alcoholConcentration = alcoholConcentration || product.alcoholConcentration;
     product.description = beverageDescription || product.description;
+    product.beverageCategory = beverageCategory || product.beverageCategory;
+    product.beverageBrand = beverageBrand || product.beverageBrand;
 
     // Save the updated product to the database
     const updatedProduct = await product.save();
 
     // Send the updated product as a response
+    res.status(201);
     res.json(updatedProduct);
   } catch (error) {
     console.error(error);
@@ -125,13 +134,22 @@ const deleteAProduct = async (req, res) => {
   })
 } 
 
-// Add more controller functions as needed
+const getCount = async (req, res) => {
+      const productCount = await Product.countDocuments((count) => count)
+
+      if(!productCount){
+        res.status(500).json({success : false})
+      }
+
+      res.send(productCount);
+}
+
 
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProductById,
-  deleteAProduct
-  // Add more controller functions as needed
+  deleteAProduct,
+  getCount
 };
