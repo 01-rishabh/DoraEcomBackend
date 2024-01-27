@@ -1,10 +1,25 @@
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 // Get all users
 const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().select('-passwordHash');
         res.json(users);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+const getUserById = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const user = await User.findById(userId).select('-passwordHash'); //using hash password
+
+        if(!user){
+            return res.status(400).send('The user cannot be found!');
+        }
+        res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -12,26 +27,89 @@ const getAllUsers = async (req, res) => {
 
 // Create a new user
 const createUser = async (req, res) => {
-    const { uid, displayName, email, userImage } = req.body;
+    try{
+        const salt = await bcrypt.genSalt(10);
 
-    try {
-        const newUser = new User({
-            uid,
-            displayName,
-            email,
-            userImage,
-        });
+    let newUser = new User({
+        displayName: req.body.displayName,
+        email: req.body.email,
+        passwordHash: await bcrypt.hashSync(req.body.password, salt),//using cryptography for hashing password
+        phone: req.body.phone,
+        isAdmin: req.body.isAdmin,
+        street: req.body.street,
+        apartment: req.body.apartment,
+        zip: req.body.zip,
+        city: req.body.city,
+        country: req.body.country,
+        user: req.body.userImage,
+    })
 
-        const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        newUser = await newUser.save();
+        if(!newUser){
+          return  res.status(400).send('the user cannot be created!')
+        }
+        res.status(201).json(newUser);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 };
 
-// Add more controller functions for updating and deleting users
+const updateUser = async (req, res) => {
+    try{
+    let newUser = new User({
+        displayName: req.body.displayName,
+        email: req.body.email,
+        passwordHash: req.body.passwordHash, //using cryptography for hashing password
+        phone: req.body.phone,
+        isAdmin: req.body.isAdmin,
+        street: req.body.street,
+        apartment: req.body.apartment,
+        zip: req.body.zip,
+        city: req.body.city,
+        country: req.body.country,
+        user: req.body.userImage,
+    })
+
+        newUser = await newUser.save();
+        if(!newUser){
+           return res.status(400).send('the user cannot be created!')
+        }
+        res.status(201).json(newUser);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+
+const loginUser = async(req, res) => {
+    try{
+        const user = await User.findOne({email: req.body.email});
+
+        if(!user){
+            return res.status(400).send('The user not found');
+        }
+
+        if(user && bcrypt.compareSync(req.body.password, user.passwordHash)){
+            return res.status(200).send({
+                "message": "The user is Authenticated."
+            })
+        } else {
+            return res.status(400).send('The password is wrong.')
+        }
+
+    } catch(error){
+        console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 
 module.exports = {
     getAllUsers,
+    getUserById,
     createUser,
+    updateUser,
+    loginUser,
+    // registerUser,
+    // deleteUser
 };
