@@ -11,8 +11,16 @@ const productSchema = new mongoose.Schema({
     beverageDescription: String,
     beverageCategory: String,
     beverageBrand: String
-    
+
 });
+
+// productSchema.virtual('id').get(function () {
+//     return this._id.toHexString();
+// });
+
+// productSchema.set('toJSON', {
+//     virtuals: true,
+// });
 
 const Beverage  = mongoose.model('Beverage', productSchema);
 

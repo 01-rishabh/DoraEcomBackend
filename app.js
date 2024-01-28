@@ -3,11 +3,20 @@ const express = require('express');
 const app = express();
 const productRoutes = require('./routes/products'); // Update with your actual routes
 const userRoutes = require('./routes/userRoute');
+//const cors = require('cors');
+const bodyParser = require('body-parser');
+const authJwt = require('./helpers/jwt');
+const errorHandler = require('./helpers/error-handler');
+
 
 require('./config');
 
 // Set up middleware for parsing JSON
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(authJwt());
+app.use(errorHandler);
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use((_, res, next) => {
@@ -25,9 +34,6 @@ app.use('/products', productRoutes);
 
 app.use('/users', userRoutes);
 
-// app.get('/', (req, res) => {
-//   res.send('Welcome to the DoraEnterprises.');
-// })
 
 const PORT = process.env.PORT || 3004;
 
@@ -36,10 +42,3 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-
-
-
-// BACKEND FLOW:
-// Models --> Controllers --> Routes --> Driver (App.js)
-
-//Shifted on new machine.
