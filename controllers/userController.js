@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Get all users
 const getAllUsers = async (req, res) => {
@@ -83,14 +84,23 @@ const updateUser = async (req, res) => {
 const loginUser = async(req, res) => {
     try{
         const user = await User.findOne({email: req.body.email});
-
+        const secret = process.env.secret;
         if(!user){
             return res.status(400).send('The user not found');
         }
 
         if(user && bcrypt.compareSync(req.body.password, user.passwordHash)){
+            const token = jwt.sign({
+                userId : user._id,
+                idAdmin: user.isAdmin
+            }, secret,
+            {
+                expiresIn: '1200s'
+            }
+            )
+
             return res.status(200).send({
-                "message": "The user is Authenticated."
+                user: user.email, token: token
             })
         } else {
             return res.status(400).send('The password is wrong.')
