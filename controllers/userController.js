@@ -42,7 +42,7 @@ const createUser = async (req, res) => {
         zip: req.body.zip,
         city: req.body.city,
         country: req.body.country,
-        user: req.body.userImage,
+        userImage: req.body.userImage
     })
 
         newUser = await newUser.save();
@@ -57,10 +57,20 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try{
-    let newUser = new User({
+        const userExist = await User.findById(req.params.id);
+        let newPassword
+        if(req.body.password){
+            newPassword = bcrypt.hashSync(req.body.password, 10);
+        } else {
+            newPassword = userExist.passwordHash;
+        }
+
+        
+
+    const newUser = await User.findByIdAndUpdate(req.params.id, {
         displayName: req.body.displayName,
         email: req.body.email,
-        passwordHash: req.body.passwordHash, //using cryptography for hashing password
+        passwordHash: newPassword, //using cryptography for hashing password
         phone: req.body.phone,
         isAdmin: req.body.isAdmin,
         street: req.body.street,
@@ -68,12 +78,14 @@ const updateUser = async (req, res) => {
         zip: req.body.zip,
         city: req.body.city,
         country: req.body.country,
-        user: req.body.userImage,
-    })
+        userImage: req.body.userImage,
+    },
+        {new : true}
+    )
 
         newUser = await newUser.save();
         if(!newUser){
-           return res.status(400).send('the user cannot be created!')
+           return res.status(400).send('the user cannot be updated!')
         }
         res.status(201).json(newUser);
     } catch (err) {
@@ -92,10 +104,10 @@ const loginUser = async(req, res) => {
         if(user && bcrypt.compareSync(req.body.password, user.passwordHash)){
             const token = jwt.sign({
                 userId : user._id,
-                idAdmin: user.isAdmin
+                isAdmin: user.isAdmin
             }, secret,
             {
-                expiresIn: '1200s'
+                expiresIn: '12h'
             }
             )
 
@@ -113,13 +125,11 @@ const loginUser = async(req, res) => {
 };
 
 
-
 module.exports = {
     getAllUsers,
     getUserById,
-    createUser,
     updateUser,
     loginUser,
-    // registerUser,
+    createUser
     // deleteUser
 };

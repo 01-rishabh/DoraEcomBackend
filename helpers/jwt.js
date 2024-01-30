@@ -5,21 +5,25 @@ function authJwt() {
     return jwt({
         secret,
         algorithms: ["HS256"],
-        isRevoked: isRevoked
+        //isRevoked: isRevoked
     }).unless({
         path: [
-            { url: /\/products(.*)/, methods: ['GET', 'OPTIONS'] },
-            '/users/login'
+            
+            {url: /\/products(.*)/ , methods: ['GET', 'OPTIONS'] },
+           
+            
+            '/users/login',
+            '/users/createUser',
         ]
     })
 }
 
-async function isRevoked(req, payload, done){
-    if(!payload.isAdmin){
-        done(null, true);
-    }
+// async function isRevoked(req, payload, done){
+//     if(!payload.isAdmin){
+//         done(null, true);
+//     }
 
-    done();
-}
+//     done();
+// }
 
 module.exports = authJwt;
