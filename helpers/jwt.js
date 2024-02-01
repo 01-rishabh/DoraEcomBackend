@@ -10,7 +10,7 @@ function authJwt() {
         path: [
             
             {url: /\/products(.*)/ , methods: ['GET', 'OPTIONS'] },
-           
+            {url: /\/orders(.*)/ , methods: ['GET', 'OPTIONS', 'POST'] },
             
             '/users/login',
             '/users/createUser',

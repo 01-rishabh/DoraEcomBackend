@@ -15,21 +15,25 @@ const OrderList = async (req, res) => {
       }
 }
 
-const createProduct = async (req, res) => {
+const createOrder = async (req, res) => {
     try {
         const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem) =>{
             let newOrderItem = new OrderItems({
                 quantity: orderItem.quantity,
                 product: orderItem.product
             })
+
+            
     
             newOrderItem = await newOrderItem.save();
-    
+            
             return newOrderItem._id;
         }))
         const orderItemsIdsResolved =  await orderItemsIds;
       // Extracting order information from the request body
-      let order = new Order({
+
+     
+      let order = new Orders({
         orderItems: orderItemsIdsResolved,
         shippingAddress1: req.body.shippingAddress1,
         shippingAddress2: req.body.shippingAddress2,
@@ -38,9 +42,11 @@ const createProduct = async (req, res) => {
         country: req.body.country,
         phone: req.body.phone,
         status: req.body.status,
-        totalPrice: totalPrice,
+        totalNumber: req.body.totalNumber,
         user: req.body.user,
     })
+
+   
   
       // Saving the new order to the database
       order = await order.save();
@@ -58,5 +64,5 @@ const createProduct = async (req, res) => {
 
 module.exports = {
     OrderList,
-    createProduct
+    createOrder
 }
