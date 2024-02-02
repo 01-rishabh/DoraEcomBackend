@@ -4,7 +4,7 @@ const OrderItems = require('../models/OrderItems');
 
 const OrderList = async (req, res) => {
     try{
-        const ordersList = await Orders.find();
+        const ordersList = await Orders.find().populate('user', 'name').sort({'dateOrdered': -1});
         if(!ordersList){
             return res.status(500).json({success: false})
           }
@@ -14,6 +14,23 @@ const OrderList = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
       }
 }
+
+const OrderById = async (req, res) => {
+  try{
+      const orders = await Orders.findById(req.params._id)
+      .populate('user', 'name')
+      .populate({path: 'orerItems', populate: 'product'});
+
+      if(!orders){
+          return res.status(500).json({success: false})
+        }
+        res.send(orders);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 
 const createOrder = async (req, res) => {
     try {
@@ -62,7 +79,47 @@ const createOrder = async (req, res) => {
     }
   };
 
+  const OrderUpdate = async (req, res) => {
+    try{
+      const order = await Orders.findByIdAndUpdate(
+        req.params.id,
+        {
+          status: req.body.status
+        },
+        {new: true}
+      )
+  
+      if(!order){
+        return res.status(400).send('Order was not found');
+      }
+    }
+    catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+    
+  } 
+
+  const OrderDelete = async (req, res) => {
+    
+      await Orders.findByIdAndRemove(req.params.id).then(order => {
+        if(order){
+          return res.status(200).json({success: true, message: 'the order'})
+        } else {
+          return res.status(404).json({success: false, message: "order not found"})
+        }
+      }).catch (error => {
+        res.status(500).json({ error: error });
+      }
+      )
+  } 
+
+
 module.exports = {
     OrderList,
-    createOrder
+    OrderById,
+    createOrder,
+  OrderUpdate,
+  OrderDelete
+
 }
