@@ -49,6 +49,14 @@ const createOrder = async (req, res) => {
         const orderItemsIdsResolved =  await orderItemsIds;
       // Extracting order information from the request body
 
+      const totalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemId)=>{
+        const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
+        const totalNumber = orderItem.product.price * orderItem.quantity;
+        return totalNumber
+    }))
+
+    const totalNumber = totalPrices.reduce((a,b) => a +b , 0);
+
      
       let order = new Orders({
         orderItems: orderItemsIdsResolved,
@@ -59,7 +67,7 @@ const createOrder = async (req, res) => {
         country: req.body.country,
         phone: req.body.phone,
         status: req.body.status,
-        totalNumber: req.body.totalNumber,
+        totalNumber: totalNumber,
         user: req.body.user,
     })
 
@@ -102,8 +110,11 @@ const createOrder = async (req, res) => {
 
   const OrderDelete = async (req, res) => {
     
-      await Orders.findByIdAndRemove(req.params.id).then(order => {
+      await Orders.findByIdAndRemove(req.params.id).then(async order => {
         if(order){
+          await order.orderItems.map(async orderItem => {
+            await OrderItems.findByIdAndRemove(orderItem).then
+          })
           return res.status(200).json({success: true, message: 'the order'})
         } else {
           return res.status(404).json({success: false, message: "order not found"})
@@ -114,12 +125,23 @@ const createOrder = async (req, res) => {
       )
   } 
 
+  const getCount = async (req, res) => {
+    const orderCount = await Orders.countDocuments((count) => count)
+
+    if(!orderCount){
+      res.status(500).json({success : false})
+    }
+
+    res.send(orderCount);
+}
+
 
 module.exports = {
     OrderList,
     OrderById,
     createOrder,
   OrderUpdate,
-  OrderDelete
+  OrderDelete,
+  getCount
 
 }

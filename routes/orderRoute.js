@@ -8,6 +8,7 @@ router.get('/:id', OrdersController.OrderById);
 router.post('/', OrdersController.createOrder);
 router.put('/', OrdersController.OrderUpdate);
 router.delete('/', OrdersController.OrderDelete)
+router.get('/ordersCount', OrdersController.getCount);
 
 // Add more routes as needed
 
