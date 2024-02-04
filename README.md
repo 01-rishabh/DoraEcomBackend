@@ -16,3 +16,33 @@ To make our server protected we make sure that our api is not used or accessed w
 library express-jwt > is used to secure the apis to our server
 
 isRevoked is used to whether the user has the permission to use the admin panel or not. if a customer tries to modify any product he must get an authorised error.
+
+
+//List of endpoints:
+  USER
+- getall users
+- get user by id
+- register user (create user)
+- login user
+- update user
+
+  PRODUCTS
+- get all products
+- get product by id
+- create product
+- update product
+- delete product
+- get count
+
+  ORDERS
+- get all orders
+- get order by id
+- create order
+- update order
+- delete order
+- get orders count
+
+  Cart
+- get cart by id
+- add to cart
+- remove from cart
