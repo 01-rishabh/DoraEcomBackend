@@ -9,6 +9,7 @@ router.post('/', OrdersController.createOrder);
 router.put('/', OrdersController.OrderUpdate);
 router.delete('/', OrdersController.OrderDelete)
 router.get('/ordersCount', OrdersController.getCount);
+router.get('/getMyOrders', OrdersController.getMyOrders);
 
 // Add more routes as needed
 

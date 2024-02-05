@@ -135,6 +135,10 @@ const createOrder = async (req, res) => {
     res.send(orderCount);
 }
 
+const getMyOrders = async (req, res) => {
+  const orders = await Orders.find({ user: req.user._id });
+  res.status(200).json(orders);
+};
 
 module.exports = {
     OrderList,
@@ -142,6 +146,7 @@ module.exports = {
     createOrder,
   OrderUpdate,
   OrderDelete,
-  getCount
+  getCount,
+  getMyOrders
 
 }

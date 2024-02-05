@@ -8,10 +8,11 @@ function authJwt() {
         //isRevoked: isRevoked
     }).unless({
         path: [
-            
+            //without authorisation endpoints
             {url: /\/products(.*)/ , methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'DELETE'] },
-            {url: /\/orders(.*)/ , methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'DELETE'] },
+            {url: /\/orders(.*)/ , methods: ['OPTIONS'] },
             
+            //with authorisation endpoints
             '/users/login',
             '/users/createUser',
         ]
