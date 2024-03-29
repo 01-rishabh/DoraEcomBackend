@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const productRoutes = require('./routes/products'); // Update with your actual routes
 const userRoutes = require('./routes/userRoute');
+const orderRoutes = require('./routes/orderRoute');
 //const cors = require('cors');
 const bodyParser = require('body-parser');
 const authJwt = require('./helpers/jwt');
@@ -33,6 +34,8 @@ app.use((_, res, next) => {
 app.use('/products', productRoutes);
 
 app.use('/users', userRoutes);
+
+app.use('/orders', orderRoutes)
 
 
 const PORT = process.env.PORT || 3004;
