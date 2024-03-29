@@ -98,19 +98,33 @@ const updateProductById = async (req, res) => {
       beverageBrand } = req.body;
 
     // Update the product properties
-    product.name = productName || product.name;
-    product.price = productPrice || product.price;
-    product.averageRating = averageRating || product.averageRating;
-    product.productImage = productImage || product.productImage;
-    product.volume = volume || product.volume;
-    product.stock = stock || product.stock;
-    product.alcoholConcentration = alcoholConcentration || product.alcoholConcentration;
-    product.description = beverageDescription || product.description;
-    product.beverageCategory = beverageCategory || product.beverageCategory;
-    product.beverageBrand = beverageBrand || product.beverageBrand;
+    let updatedProduct = await Product.findByIdAndUpdate(productId, {
+      productName,
+      productPrice,
+      averageRating,
+      productImage,
+      volume,
+      stock,
+      alcoholConcentration,
+      beverageDescription,
+      beverageCategory, 
+      beverageBrand
+    },{
+      new: true
+    })
+    // product.name = productName || product.name;
+    // product.price = productPrice || product.price;
+    // product.averageRating = averageRating || product.averageRating;
+    // product.productImage = productImage || product.productImage;
+    // product.volume = volume || product.volume;
+    // product.stock = stock || product.stock;
+    // product.alcoholConcentration = alcoholConcentration || product.alcoholConcentration;
+    // product.description = beverageDescription || product.description;
+    // product.beverageCategory = beverageCategory || product.beverageCategory;
+    // product.beverageBrand = beverageBrand || product.beverageBrand;
 
     // Save the updated product to the database
-    const updatedProduct = await product.save();
+    updatedProduct = await updatedProduct.save();
 
     // Send the updated product as a response
     res.status(201);

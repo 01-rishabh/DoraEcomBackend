@@ -18,3 +18,6 @@ router.put('/update/:userId', userController.updateUser);
 // Add more routes for updating and deleting users
 
 module.exports = router;
+
+
+
